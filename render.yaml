@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: wikipiure
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    branches:
+      - main
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false

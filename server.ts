@@ -8,7 +8,8 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 3000);
+const HOST = process.env.HOST || "0.0.0.0";
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -330,9 +331,9 @@ async function startServer() {
     });
   }
 
-  // Bind to 0.0.0.0 on port 3000
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Wiki Quiz server running on http://0.0.0.0:${PORT} in ${isProd ? "production" : "development"} mode`);
+  // Bind to Render's PORT and HOST if provided
+  app.listen(PORT, HOST, () => {
+    console.log(`Wiki Quiz server running on http://${HOST}:${PORT} in ${isProd ? "production" : "development"} mode`);
   });
 }
 
