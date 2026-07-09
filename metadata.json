@@ -1,0 +1,6 @@
+{
+  "name": "Wiki Quiz",
+  "description": "An interactive Wikipedia-powered quiz application that generates custom trivia challenges from any Wikipedia article using Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
