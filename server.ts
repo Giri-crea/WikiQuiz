@@ -145,12 +145,13 @@ app.post("/api/quiz/generate", async (req, res) => {
       return res.status(400).json({ error: "Article title and content (extract) are required" });
     }
 
-    if (!apiKey) {
+    if (!ai) {
       return res.status(500).json({ error: "GEMINI_API_KEY environment variable is missing" });
     }
 
-    // Construct prompt
-    const prompt = `You are an expert quiz master.
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: `You are an expert quiz master.
 Analyze the following Wikipedia article text about "${title}" and generate a high-quality, engaging quiz based on it.
 
 Article content:
@@ -166,11 +167,7 @@ Ensure:
 - All correct answers must be 100% accurate according to the provided article text.
 - Options must be plausible, but only one is correct.
 - Correct answer option must be included exactly in the options array.
-- For each question, provide a detailed explanation of the fact and mention the exact fact source from the text to help the user learn.`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
+- For each question, provide a detailed explanation of the fact and mention the exact fact source from the text to help the user learn.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -238,19 +235,17 @@ app.post("/api/quiz/did-you-know", async (req, res) => {
       return res.status(400).json({ error: "Article title and content (extract) are required" });
     }
 
-    if (!apiKey) {
+    if (!ai) {
       return res.status(500).json({ error: "GEMINI_API_KEY environment variable is missing" });
     }
 
-    const prompt = `Generate 4 surprising, engaging, and educational "Did You Know?" fun facts from the Wikipedia article titled "${title}".
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: `Generate 4 surprising, engaging, and educational "Did You Know?" fun facts from the Wikipedia article titled "${title}".
 Keep each fact concise (1-2 sentences) and highly informative.
 
 Article content:
-${extract}`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
+${extract}`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -291,7 +286,7 @@ app.post("/api/quiz/ask-assistant", async (req, res) => {
       return res.status(400).json({ error: "Title, extract, and question are required" });
     }
 
-    if (!apiKey) {
+    if (!ai) {
       return res.status(500).json({ error: "GEMINI_API_KEY environment variable is missing" });
     }
 
